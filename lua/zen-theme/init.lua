@@ -120,6 +120,7 @@ end
 --- the state file is read from.
 function M.setup(opts)
   opts = opts or {}
+  M.stop()  -- a second setup() would otherwise leave the first watcher running
   overrides = opts.themes or {}
   path = opts.path or DEFAULT_PATH
   dir, name = path:match("^(.*)/([^/]+)$")
