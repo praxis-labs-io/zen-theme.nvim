@@ -46,6 +46,16 @@ local function resolve(state)
   return overrides[state.name] or state.nvimColorscheme
 end
 
+-- Bring a lazy-loaded colorscheme onto the runtimepath. lazy.nvim leaves a `lazy = true`
+-- colorscheme plugin unloaded until something asks for it by name, and `:colorscheme` does not
+-- ask: without this the apply fails E185 for every theme declared that way.
+local function load_owner(scheme)
+  local ok, loader = pcall(require, "lazy.core.loader")
+  if ok then
+    pcall(loader.colorscheme, scheme)
+  end
+end
+
 -- Apply the state's colorscheme. `background` is set first so a colorscheme that reads it picks the
 -- right variant, and the apply is a pcall so a colorscheme the user has not installed leaves the
 -- current one up instead of raising.
@@ -57,6 +67,7 @@ local function apply(state)
   if state.dark ~= nil then
     vim.o.background = state.dark and "dark" or "light"
   end
+  load_owner(scheme)
   if pcall(vim.cmd.colorscheme, scheme) then
     applied = scheme
   end
