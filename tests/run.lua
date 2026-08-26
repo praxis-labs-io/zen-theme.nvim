@@ -103,6 +103,23 @@ check("asks lazy to load the colorscheme's owner", asked, "probe-lazy")
 check("applies a lazy-loaded colorscheme", vim.g.colors_name, "probe-lazy")
 package.loaded["lazy.core.loader"] = nil
 
+-- Regression: Vim does not fire autocmds from inside a non-nested autocmd, and lazy registers its
+-- event handlers that way. Without an explicit announce, the colorscheme changes while every
+-- ColorScheme handler is skipped, so a config's transparency or statusline overrides are silently
+-- lost. The outer autocmd here is registered exactly as lazy registers its own.
+local reacted = 0
+vim.api.nvim_create_autocmd("ColorScheme", { callback = function() reacted = reacted + 1 end })
+vim.api.nvim_create_autocmd("User", {
+  pattern = "ZenThemeHarness",
+  callback = function()
+    publish({ name = "h", dark = true, nvimColorscheme = "probe-dark" })
+    reload().setup({ path = state })
+  end,
+})
+applied_reset = nil
+vim.api.nvim_exec_autocmds("User", { pattern = "ZenThemeHarness" })
+check("fires ColorScheme from inside a non-nested autocmd", reacted > 0, true)
+
 vim.fn.delete(dir, "rf")
 
 if #failures == 0 then

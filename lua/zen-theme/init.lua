@@ -56,6 +56,18 @@ local function load_owner(scheme)
   end
 end
 
+-- Fire ColorScheme ourselves, because the apply usually runs where Vim will not.
+--
+-- Vim does not fire autocmds triggered from inside a non-nested autocmd, and lazy.nvim registers
+-- its `event =` handlers without `nested`. So a `:colorscheme` from inside one recolors the editor
+-- while every ColorScheme handler is skipped: transparency overrides, statusline colors, anything
+-- a config re-asserts after a theme change. Firing it explicitly makes the apply look the same to
+-- a config whatever context it ran in. Handlers are idempotent by nature, so a duplicate on the
+-- paths where Vim does fire it costs nothing.
+local function announce(scheme)
+  pcall(vim.api.nvim_exec_autocmds, "ColorScheme", { modeline = false, pattern = scheme })
+end
+
 -- Apply the state's colorscheme. `background` is set first so a colorscheme that reads it picks the
 -- right variant, and the apply is a pcall so a colorscheme the user has not installed leaves the
 -- current one up instead of raising.
@@ -70,6 +82,7 @@ local function apply(state)
   load_owner(scheme)
   if pcall(vim.cmd.colorscheme, scheme) then
     applied = scheme
+    announce(scheme)
   end
 end
 
