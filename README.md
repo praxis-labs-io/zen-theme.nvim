@@ -27,8 +27,8 @@ theme flips the editor along with everything else.
 
 ## Requirements
 
-- [ZenTerm](https://github.com/praxis-labs-io/zen-term) [version?] or later, the first
-  release that publishes the state file.
+- [ZenTerm](https://github.com/praxis-labs-io/zen-term) 1.1.0 or later, the first release that
+  publishes the state file.
 - Neovim 0.10+ (uses `vim.uv`, `vim.json`).
 - The colorschemes you want it to reach, installed. This plugin applies a colorscheme; it
   does not ship any.
@@ -39,7 +39,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "zen-term/zen-theme.nvim",
+  "praxis-labs-io/zen-theme.nvim",
   lazy = false,
   priority = 1000,
   opts = {},
