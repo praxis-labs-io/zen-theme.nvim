@@ -7,6 +7,14 @@ Neovim follows **[ZenTerm](https://github.com/praxis-labs-io/zen-term)'s theme**
 Pick a theme in ZenTerm and your editor recolors with the terminal and the chrome, live,
 with no restart. Outside ZenTerm the plugin is inert, so your config stays portable.
 
+## Requirements
+
+- [ZenTerm](https://github.com/praxis-labs-io/zen-term) 1.1.0 or later, the first release that
+  publishes the state file.
+- Neovim 0.10+ (uses `vim.uv`, `vim.json`).
+- The colorschemes you want it to reach, installed. This plugin applies a colorscheme; it
+  does not ship any.
+
 ## Install
 
 With [lazy.nvim](https://github.com/folke/lazy.nvim):
@@ -31,14 +39,6 @@ clone one mid-session:
 
 Under a distro that sets its own colorscheme at startup (LazyVim, for one), load this
 after that so it applies last.
-
-## Requirements
-
-- [ZenTerm](https://github.com/praxis-labs-io/zen-term) 1.1.0 or later, the first release that
-  publishes the state file.
-- Neovim 0.10+ (uses `vim.uv`, `vim.json`).
-- The colorschemes you want it to reach, installed. This plugin applies a colorscheme; it
-  does not ship any.
 
 ## How it works
 
